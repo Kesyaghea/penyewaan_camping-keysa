@@ -10,10 +10,25 @@ class Pemesanan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama',
+        'nama_pemesan',
         'product',
         'harga',
         'jumlah',
-        'total'
+        'total_harga'
     ];
+     // Relasi Many-to-Many dengan produk
+     public function produks()
+     {
+         return $this->belongsToMany(produk::class)->withPivot('jumlah', 'harga', 'total_harga');
+     }
+ 
+     // Menghitung total harga pemesanan
+     public function getTotalPriceAttribute()
+     {
+         return $this->produk->sum(function ($produk) {
+             return $produk->pivot->jumlah * $produk->pivot->harga;
+         });
+     }
 }
+       
+

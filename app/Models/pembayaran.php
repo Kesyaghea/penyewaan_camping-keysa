@@ -14,4 +14,13 @@ class pembayaran extends Model
         'tanggal_pembayaran',
         'total_pembayaran'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function camping()
+    {
+        return $this->belongsTo(Produk::class);
+    }
 }

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_penyewa');
+            $table->foreignId('id_produks');
+            $table->foreignId('id_pemesanans');
             $table->integer('tanggal_pembayaran');
-            $table->integer('total_pembayaran');
+            $table->decimal('total_pembayaran');
             $table->timestamps();
         });
     }

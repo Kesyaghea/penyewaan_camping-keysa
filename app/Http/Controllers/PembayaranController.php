@@ -12,15 +12,16 @@ class PembayaranController extends Controller
      */
     public function index()
     {
-        //
+        $data = Pembayaran::all();
+        return view('pembayaran.index',compact('pembayaran'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
+    { 
+        return view('pembayaran.create', compact('produk'));
     }
 
     /**
@@ -28,7 +29,17 @@ class PembayaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'nama_penyewa' => 'string',
+            'tanggal_pembayaran' => 'required|date',
+            'total_pembayaran' => 'required|numeric|min:1000',
+        ]);
+
+        // Simpan pembayaran
+        $pembayaran = Pembayaran::create($validatedData);
+
+        return response()->json(['message' => 'Pembayaran berhasil disimpan', 'data' => $pembayaran], 201);
     }
 
     /**

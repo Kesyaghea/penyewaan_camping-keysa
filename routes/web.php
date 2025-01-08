@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PemesananController;
+use App\Http\Controllers\ProdukController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ProdukController::class,'index'])->name('home');
+Route::resource('produk', ProdukController::class);
+
+Route::get('/', [PemesananController::class,'index'])->name('home');
+Route::resource('pemesanan', PemesananController::class);
+

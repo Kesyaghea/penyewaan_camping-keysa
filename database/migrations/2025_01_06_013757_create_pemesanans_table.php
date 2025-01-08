@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pemesanans', function (Blueprint $table) {
+        Schema::create('produks', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('product');
-            $table->integer('harga');
-            $table->integer('jumlah');
-            $table->integer('total');
-            $table->id();
+            $table->foreignId('order_id')->constrained()->onDelete('cascade'); // Pemesanan
+            $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Produk
+            $table->integer('quantity');
+            $table->decimal('price', 10, 2); // Harga produk saat itu
+            $table->decimal('total_price', 10, 2); // Total harga (quantity * price)
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pemesanans');
+        Schema::dropIfExists('produks');
     }
 };

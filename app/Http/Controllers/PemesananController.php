@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pemesanan;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class PemesananController extends Controller
@@ -12,7 +13,10 @@ class PemesananController extends Controller
      */
     public function index()
     {
-        //
+        //mengambil semua data dari model dan menyimpan dalam fariabel $products
+        $pemesanan = Pemesanan::all();
+        //mengembalikan view 
+        return view('pemesanan.index',compact('pemesanan'));
     }
 
     /**
@@ -20,7 +24,8 @@ class PemesananController extends Controller
      */
     public function create()
     {
-        //
+        $produk = Produk::all(); // Mengambil semua data peralatan untuk ditampilkan di form
+        return view('pemesanan.create', compact('produk'));
     }
 
     /**
@@ -28,38 +33,66 @@ class PemesananController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_pemesan' => 'required|string|max:255',
+            'product' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'jumlah' => 'required|integer|min:1',
+            'total' => 'required|integer|min:1',
+        ]);
+
+        Pemesanan::create($validatedData);
+        return redirect()->route('pemesanan.index')->with('success', 'Pemesanan berhasil dibuat');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Pemesanan $pemesanan)
+    public function show($id)
     {
-        //
+        $pemesanan = Pemesanan::findOrFail($id);
+        return view('pemesanan.show', compact('pemesanan'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pemesanan $pemesanan)
+    public function edit($id)
     {
-        //
+        $pemesanan = Pemesanan::findOrFail($id);
+        return view('pemesanan.edit', compact('pemesanan', 'produk'));
+   
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pemesanan $pemesanan)
+    public function update(Request $request,$id)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_pemesan' => 'required|string|max:255',
+            'product' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'peralatan_id' => 'required|exists:peralatans,id', // Validasi ID peralatan
+            'jumlah' => 'required|integer|min:1',
+            'total' => 'required|integer|min:1',
+        ]);
+
+        $pemesanan = Pemesanan::findOrFail($id);
+        $pemesanan->update($validatedData);
+
+        return redirect()->route('pemesanan.index')->with('success', 'Pemesanan berhasil diperbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pemesanan $pemesanan)
+    public function destroy($id)
     {
-        //
+        $pemesanan = Pemesanan::findOrFail($id);
+        $pemesanan->delete();
+
+        return redirect()->route('pemesanan.index')->with('success', 'Pemesanan berhasil dihapus!');
+
     }
 }
